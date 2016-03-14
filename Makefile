@@ -1,18 +1,21 @@
-OPENRESTY_PREFIX=/usr/local/openresty
+LUA_VERSION=5.1
 
-PREFIX ?= /usr/local/openresty
-LUA_INCLUDE_DIR ?= $(PREFIX)/include
-LUA_LIB_DIR ?= $(PREFIX)/lualib
-INSTALL ?= install
+LUA_DIR=/usr/local
 
-.PHONY: all test install
+# for C modules
+LUA_LIBDIR=$(LUA_DIR)/lib/lua/$(LUA_VERSION)
+# for Lua modules
+LUA_SHAREDIR=$(LUA_DIR)/share/lua/$(LUA_VERSION)
 
-all: ;
+INSTALL=install
 
-install: all
-	$(INSTALL) -d $(LUA_LIB_DIR)/resty/mongol
-	$(INSTALL) lib/resty/mongol/*.lua $(LUA_LIB_DIR)/resty/mongol
+.PHONY: all
 
+all:
+	@echo "Nothing to compile, just 'make install' ..."
 
-test:
-	PATH=$(OPENRESTY_PREFIX)/nginx/sbin:$$PATH prove -I../test-nginx/lib -r t
+install:
+	$(INSTALL) -d $(LUA_SHAREDIR)/resty
+	$(INSTALL) -d $(LUA_SHAREDIR)/resty/mongol
+	$(INSTALL) -m 644 lib/resty/mongol/*.lua $(LUA_SHAREDIR)/resty/mongol/
+
